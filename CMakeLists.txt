@@ -16,9 +16,13 @@ add_executable(Main main.cu)
 add_library(GLUT STATIC IMPORTED)
 set_target_properties(GLUT PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/common"
-    IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/lib/glut64.lib"
+    IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/glut64.lib"
 )
+
+add_library(LABS STATIC "${CMAKE_SOURCE_DIR}/labs/ch_3.cu")
+
+target_include_directories(LABS PUBLIC ${CMAKE_SOURCE_DIR}/common)
 
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/common)
 
-target_link_libraries(Main PRIVATE GLUT)
+target_link_libraries(Main PRIVATE GLUT LABS)
