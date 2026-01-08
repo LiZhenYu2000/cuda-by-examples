@@ -19,10 +19,16 @@ set_target_properties(GLUT PROPERTIES
     IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/glut64.lib"
 )
 
-add_library(LABS STATIC "${CMAKE_SOURCE_DIR}/labs/ch_3.cu")
+add_library(CPP_LIBS STATIC "${CMAKE_SOURCE_DIR}/lib/book_cpp.cu")
+
+add_library(LABS STATIC 
+    "${CMAKE_SOURCE_DIR}/labs/ch_3.cu" 
+    "${CMAKE_SOURCE_DIR}/labs/ch_4.cu" )
+
+target_include_directories(CPP_LIBS PUBLIC ${CMAKE_SOURCE_DIR}/common)
 
 target_include_directories(LABS PUBLIC ${CMAKE_SOURCE_DIR}/common)
 
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/common)
 
-target_link_libraries(Main PRIVATE GLUT LABS)
+target_link_libraries(Main PRIVATE GLUT LABS CPP_LIBS)
