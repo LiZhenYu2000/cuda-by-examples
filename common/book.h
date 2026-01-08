@@ -17,35 +17,33 @@
 #ifndef __BOOK_H__
 #define __BOOK_H__
 #include <stdio.h>
+#include <book_interface.hpp>
 
-static void HandleError( cudaError_t err,
-                         const char *file,
-                         int line ) {
-    if (err != cudaSuccess) {
-        printf( "%s in %s at line %d\n", cudaGetErrorString( err ),
-                file, line );
-        exit( EXIT_FAILURE );
+struct cuComplex {
+    float r;
+    float i;
+    cuComplex( float a, float b ) : r(a), i(b) {}
+    float magnitude2( void ) { return r * r + i * i; }
+    cuComplex operator*( const cuComplex& a ) {
+        return cuComplex( r * a.r - i * a.i, i * a.r + r * a.i );
     }
-}
-
-static int ReturnError( cudaError_t err, const char *file, int line ) {
-    if (err != cudaSuccess) {
-        printf( "%s in %s at line %d\n", cudaGetErrorString( err ),
-                file, line );
-        return -1;
+    cuComplex operator+( const cuComplex& a ) {
+        return cuComplex( r + a.r, i + a.i );
     }
-    return 0;
-}
+};
 
-#define RETURN_ERROR( err ) (ReturnError( err, __FILE__, __LINE__ ))
-
-#define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
-
-
-#define HANDLE_NULL( a ) {if (a == NULL) { \
-                            printf( "Host memory failed in %s at line %d\n", \
-                                    __FILE__, __LINE__ ); \
-                            exit( EXIT_FAILURE );}}
+struct cuComplexGPU {
+    float r;
+    float i;
+    __device__ cuComplexGPU( float a, float b ) : r(a), i(b) {}
+    __device__ float magnitude2( void ) { return r * r + i * i; }
+    __device__ cuComplexGPU operator*( const cuComplexGPU& a ) {
+        return cuComplexGPU( r * a.r - i * a.i, i * a.r + r * a.i );
+    }
+    __device__ cuComplexGPU operator+( const cuComplexGPU& a ) {
+        return cuComplexGPU( r + a.r, i + a.i );
+    }
+};
 
 template< typename T >
 void swap( T& a, T& b ) {

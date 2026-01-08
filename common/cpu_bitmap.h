@@ -20,12 +20,16 @@
 #include "gl_helper.h"
 
 struct CPUBitmap {
+    constexpr static size_t nameLen = 256;
     unsigned char    *pixels;
+    char name[nameLen] = "bitmap";
     int     x, y;
     void    *dataBlock;
     void (*bitmapExit)(void*);
 
-    CPUBitmap( int width, int height, void *d = NULL ) {
+    CPUBitmap( int width, int height, const char* name = NULL, void *d = NULL ) {
+        int idx = 0;
+        while(*name && idx < nameLen) this->name[idx ++] = *name++;
         pixels = new unsigned char[width * height * 4];
         x = width;
         y = height;
@@ -50,7 +54,7 @@ struct CPUBitmap {
         glutInit( &c, &dummy );
         glutInitDisplayMode( GLUT_SINGLE | GLUT_RGBA );
         glutInitWindowSize( x, y );
-        glutCreateWindow( "bitmap" );
+        glutCreateWindow(name);
         glutKeyboardFunc(Key);
         glutDisplayFunc(Draw);
         glutMainLoop();
