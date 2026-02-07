@@ -17,33 +17,8 @@
 #ifndef __BOOK_H__
 #define __BOOK_H__
 #include <stdio.h>
-#include <book_interface.hpp>
+#include <book_interface.h>
 
-struct cuComplex {
-    float r;
-    float i;
-    cuComplex( float a, float b ) : r(a), i(b) {}
-    float magnitude2( void ) { return r * r + i * i; }
-    cuComplex operator*( const cuComplex& a ) {
-        return cuComplex( r * a.r - i * a.i, i * a.r + r * a.i );
-    }
-    cuComplex operator+( const cuComplex& a ) {
-        return cuComplex( r + a.r, i + a.i );
-    }
-};
-
-struct cuComplexGPU {
-    float r;
-    float i;
-    __device__ cuComplexGPU( float a, float b ) : r(a), i(b) {}
-    __device__ float magnitude2( void ) { return r * r + i * i; }
-    __device__ cuComplexGPU operator*( const cuComplexGPU& a ) {
-        return cuComplexGPU( r * a.r - i * a.i, i * a.r + r * a.i );
-    }
-    __device__ cuComplexGPU operator+( const cuComplexGPU& a ) {
-        return cuComplexGPU( r + a.r, i + a.i );
-    }
-};
 
 template< typename T >
 void swap( T& a, T& b ) {

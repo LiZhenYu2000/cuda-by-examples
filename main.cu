@@ -3,9 +3,17 @@
 #include <book_cpp.hpp>
 
 // collection of chapter3 codes
-int ch_3(void);
+namespace ch3 {
+    int ch_3(void);
+}
 // collection of chapter4 codes
-int ch_4(void);
+namespace ch4 {
+    int ch_4(void);
+}
+// collection of chapter5 codes
+namespace ch5 {
+    int ch_5(void);
+}
 
 int main(int argc, char* argv[]) {
     if(argc <= 1) {
@@ -23,10 +31,13 @@ int main(int argc, char* argv[]) {
     switch (labNum)
     {
     case 3:
-        stat = ch_3();
+        stat = ch3::ch_3();
         break;
     case 4:
-        stat = ch_4();
+        stat = ch4::ch_4();
+        break;
+    case 5:
+        stat = ch5::ch_5();
         break;
     default:
         std::cerr << "Usage: <lab_number> not exist";
