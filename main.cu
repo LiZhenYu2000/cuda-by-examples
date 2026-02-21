@@ -12,7 +12,8 @@ namespace ch4 {
 }
 // collection of chapter5 codes
 namespace ch5 {
-    int ch_5(void);
+    int ch_5_1(void);
+    int ch_5_2(void);
 }
 
 int main(int argc, char* argv[]) {
@@ -24,6 +25,7 @@ int main(int argc, char* argv[]) {
     // assert(argc >= 2)
     std::istringstream strNum(std::string{argv[1]});
     int labNum = -1;
+    int subLabNum = -1;
     strNum >> labNum;
 
     int stat = 0;
@@ -37,7 +39,15 @@ int main(int argc, char* argv[]) {
         stat = ch4::ch_4();
         break;
     case 5:
-        stat = ch5::ch_5();
+        if(strNum >> subLabNum) {
+            if(subLabNum == 1)
+                stat = ch5::ch_5_1();
+            else if(subLabNum == 2)
+                stat = ch5::ch_5_2();
+            else
+                return -1;
+        } else
+            return -1;
         break;
     default:
         std::cerr << "Usage: <lab_number> not exist";

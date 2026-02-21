@@ -18,6 +18,7 @@
 #define __CPU_BITMAP_H__
 
 #include "gl_helper.h"
+#include <iostream>
 
 struct CPUBitmap {
     constexpr static size_t nameLen = 256;
@@ -29,7 +30,7 @@ struct CPUBitmap {
 
     CPUBitmap( int width, int height, const char* name = NULL, void *d = NULL ) {
         int idx = 0;
-        while(*name && idx < nameLen) this->name[idx ++] = *name++;
+        while(name && *name && idx < nameLen) this->name[idx ++] = *name++;
         pixels = new unsigned char[width * height * 4];
         x = width;
         y = height;

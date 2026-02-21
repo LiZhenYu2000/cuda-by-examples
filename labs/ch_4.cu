@@ -45,30 +45,32 @@ namespace ch4 {
     int gpu_add(T a[S], T b[S], T c[S]) {
         std::cout << "GPU vec add for pointer-like array" << std::endl;
         int stat = 0;
-        T *d_a, *d_b, *d_c;
+        T *d_a = nullptr, *d_b = nullptr, *d_c = nullptr;
+        auto cleanUp = [&stat, &d_a, &d_b, &d_c]()->int{
+            cudaFree(d_a);
+            cudaFree(d_b);
+            cudaFree(d_c);
+            return stat;
+        };
 
         stat = RETURN_ERROR(cudaMalloc((void**)&d_a, S * sizeof(T)));
-        if(stat) return -1;
+        if(stat) return cleanUp();
         stat = RETURN_ERROR(cudaMalloc((void**)&d_b, S * sizeof(T)));
-        if(stat) return -1;
+        if(stat) return cleanUp();
         stat = RETURN_ERROR(cudaMalloc((void**)&d_c, S * sizeof(T)));
-        if(stat) return -1;
+        if(stat) return cleanUp();
 
         stat = RETURN_ERROR(cudaMemcpy(d_a, a, S, cudaMemcpyHostToDevice));
-        if(stat) return -1;
+        if(stat) return cleanUp();
         stat = RETURN_ERROR(cudaMemcpy(d_b, b, S, cudaMemcpyHostToDevice));
-        if(stat) return -1;
+        if(stat) return cleanUp();
 
         gpu_add_kernel<T, S><<<S, 1>>>(d_a, d_b, d_c);
 
         stat = RETURN_ERROR(cudaMemcpy(c, d_c, S, cudaMemcpyDeviceToHost));
-        if(stat) return -1;
+        if(stat) return cleanUp();
 
-        cudaFree(d_a);
-        cudaFree(d_b);
-        cudaFree(d_c);
-
-        return stat;
+        return cleanUp();
     }
 
     template<typename T, size_t S>
@@ -202,9 +204,13 @@ namespace ch4 {
         dim3 grid = { DIM, DIM };
         unsigned char *c_ptr = cpu_bitmap.get_ptr();
         unsigned char *g_ptr = gpu_bitmap.get_ptr();
+        auto cleanUp = [&stat, &dev_ptr]()->int{
+            cudaFree(dev_ptr);
+            return stat;
+        };
 
         stat = RETURN_ERROR( cudaMalloc((void**)&dev_ptr, gpu_bitmap.image_size()) );
-        if(stat) return -1;
+        if(stat) return cleanUp();
 
         auto start = std::chrono::high_resolution_clock::now();
 
@@ -215,9 +221,8 @@ namespace ch4 {
         gpu_julia_set_kernel<DIM><<<grid, 1>>>( dev_ptr );
 
         stat = RETURN_ERROR( cudaMemcpy(g_ptr, dev_ptr, gpu_bitmap.image_size(), cudaMemcpyDeviceToHost) );
-        if(stat) return -1;
+        if(stat) return cleanUp();
 
-        cudaFree(dev_ptr);
 
         auto stp2 = std::chrono::high_resolution_clock::now();
 
@@ -230,7 +235,7 @@ namespace ch4 {
         // cpu_bitmap.display_and_exit();
         gpu_bitmap.display_and_exit();
 
-        return stat;
+        return cleanUp();
     }
 
     int ch_4(void) {

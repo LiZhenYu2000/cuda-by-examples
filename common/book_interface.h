@@ -50,8 +50,8 @@ __global__ static void gpu_generate_frame(unsigned char *dev_bitmap, int ticks) 
 
 template<int DIM>
 struct DataBlock {
-    unsigned char *dev_bitmap;
-    CPUAnimBitmap *bitmap;
+    unsigned char *dev_bitmap = nullptr;
+    CPUAnimBitmap *bitmap = nullptr;
     // Clean up used device mem
     static void clean_up(unsigned char *dev_bitmap) {
         if(dev_bitmap) cudaFree( dev_bitmap );

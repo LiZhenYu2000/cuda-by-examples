@@ -11,25 +11,28 @@ namespace ch3 {
         int stat = 0;
         int a = 2, b = 3;
         int *host_c = nullptr, *dev_c = nullptr;
+        auto cleanUp = [&stat, &host_c, &dev_c]()->int{
+            delete host_c;
+            cudaFree(dev_c);
+            return stat;
+        };
 
-        // host mem alloc
+        // host memory allocate
         host_c = new int;
-        if(!host_c) return -1;
+        if(!host_c) return cleanUp();
         *host_c = 0;
 
-        // dev mem alloc
+        // device memory allocate
         stat = RETURN_ERROR(cudaMalloc((void**)&dev_c, sizeof(int)));
-        if(stat) return -1;
+        if(stat) return cleanUp();
 
         add<<<1, 1>>>(a, b, dev_c);
-        RETURN_ERROR(cudaMemcpy(host_c, dev_c, sizeof(int), cudaMemcpyDeviceToHost));
-        if(stat) return -1;
-
-        cudaFree(dev_c);
+        stat = RETURN_ERROR(cudaMemcpy(host_c, dev_c, sizeof(int), cudaMemcpyDeviceToHost));
+        if(stat) return cleanUp();
 
         // print
         std::cout << "Intro(): " << *host_c << std::endl;
-        return 0;
+        return cleanUp();
     }
 
     int QueryDevice(void) {
