@@ -2,7 +2,7 @@
 #include <cpu_bitmap.h>
 #include <iostream>
 
-namespace ch5{
+namespace ch5 {
     template<int threadsPerBlock, int N>
     __global__ void gpu_dot(float *a, float *b, float *c) {
         __shared__ float cache[threadsPerBlock];
