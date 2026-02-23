@@ -72,6 +72,25 @@ struct DataBlock {
     }
 };
 
+struct cuSphere {
+    static constexpr float INF = 2e10f;
+    float r, g, b;
+    float x, y, z;
+    float rad;
+    __device__ float hit(float ox, float oy, float* n) {
+        float dx = ox - x;
+        float dy = oy - y;
+        if(dx * dx + dy * dy < rad * rad) {
+            float dz = sqrtf(rad * rad - dx * dx - dy * dy);
+            // Possibly for exploiting rsqrtf command?
+            *n = dz / sqrtf(rad * rad);
+            // Camera is watching from +INF to -INF
+            return dz + z;
+        }
+        return -INF;
+    }
+};
+
 struct cuComplex {
     float r;
     float i;
