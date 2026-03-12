@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <chrono>
 #include <book_interface.h>
-#include <book.h>
 #include <cpu_bitmap.h>
 #include <thread>
 
