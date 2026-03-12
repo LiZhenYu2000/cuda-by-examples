@@ -15,9 +15,13 @@ namespace ch5 {
     int ch_5_1(void);
     int ch_5_2(void);
 }
-//collection of chapter6 codes
+// collection of chapter6 codes
 namespace ch6 {
     int ch_6(void);
+}
+// collection of chapter7 codes
+namespace ch7 {
+    int ch_7(void);
 }
 
 int main(int argc, char* argv[]) {
@@ -55,6 +59,9 @@ int main(int argc, char* argv[]) {
         break;
     case 6:
         stat = ch6::ch_6();
+        break;
+    case 7:
+        stat = ch7::ch_7();
         break;
     default:
         std::cerr << "Usage: <lab_number> not exist";

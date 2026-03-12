@@ -26,7 +26,8 @@ add_library(LABS STATIC
     "${CMAKE_SOURCE_DIR}/labs/ch_4.cu"
     "${CMAKE_SOURCE_DIR}/labs/ch_5_1.cu"
     "${CMAKE_SOURCE_DIR}/labs/ch_5_2.cu"
-    "${CMAKE_SOURCE_DIR}/labs/ch_6.cu")
+    "${CMAKE_SOURCE_DIR}/labs/ch_6.cu"
+    "${CMAKE_SOURCE_DIR}/labs/ch_7.cu")
 
 target_include_directories(CPP_LIBS PUBLIC ${CMAKE_SOURCE_DIR}/common)
 
